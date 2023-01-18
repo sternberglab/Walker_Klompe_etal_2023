@@ -8,7 +8,7 @@ Note that this directory contains a subdirectory, "CheckIntSite", with the scrip
 
 Use a package manager, i.e. [pip] (https://pip.pypa.io/en/stable/), to install the required packages listed in requirements.txt, if you do not have them already installed.
 
-Ensure that NGS data are in the directory, "1_seq_data". The scripts require the following fastq files (all of which may be downloaded from the SRA. BioProject Accession #PRJNA919078). Details about fastq files may be found in the SRA and in the sample_info.xlsx file, located in the directory, "0_info".
+Ensure that NGS data are in the directory, "1_seq_data". The scripts require the following fastq files (all of which may be downloaded from the SRA. BioProject Accession #PRJNA919078). Details about fastq files may be found in the SRA and in the "sample_info.xlsx" file, located in the directory, "0_info".
 
 A4378_R1_020322.fastq
 A4375_R1_020322.fastq
