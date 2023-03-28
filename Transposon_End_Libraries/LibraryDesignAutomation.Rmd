@@ -1,0 +1,329 @@
+---
+title: "Transposon End Library Design Automation"
+author: "Matt Walker"
+date: "3/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '/Users/mattwalker/Desktop/  Grad School/Labs/Sternberg/Programs')
+knitr::opts_chunk$set(cache = TRUE)
+source("LibraryDesignAutomationFunctions.R", local = knitr::knit_global())
+```
+
+# Tn6677
+
+## Setup
+
+Import Tn6677 WT sequences
+```{r, warning=FALSE}
+library(DT)
+LeftEndWT <- read.csv("WT_Sequences/LeftEndWT.csv", header=F, sep=",", stringsAsFactors = FALSE, colClasses = c("character"))
+RightEndWT <- read.csv("WT_Sequences/RightEndWT.csv", header=F, sep=",", stringsAsFactors = FALSE, colClasses = c("character"))
+```
+
+## Substitutions
+
+### 1bp to all
+
+**Left**
+
+```{r}
+LeftOneSubsAll <- LeftEndWT
+BPs <- c("N", "N", "N")
+Row <- 1
+for (i in 1:(ncol(LeftOneSubsAll))) {
+  for (j in 1:3) {
+    BPs <- OneBpToAll(LeftEndWT[i])
+    if (i == 1){
+      Row <- i+j
+      LeftOneSubsAll[Row,i] <- BPs[j]
+      LeftOneSubsAll[Row,(i+1):ncol(LeftOneSubsAll)] <- LeftEndWT[1,(i+1):ncol(LeftOneSubsAll)]  
+    }
+    else if (i == ncol(LeftOneSubsAll)) {
+      Row <- (i*3)+j-2
+      LeftOneSubsAll[Row,i] <- BPs[j]
+      LeftOneSubsAll[Row,1:(i-1)] <- LeftEndWT[1:(i-1)]
+    }
+    else {
+      Row <- (i*3)+j-2
+      LeftOneSubsAll[Row,i] <- BPs[j]
+      LeftOneSubsAll[Row,(i+1):ncol(LeftOneSubsAll)] <- LeftEndWT[1,(i+1):ncol(LeftOneSubsAll)] 
+      LeftOneSubsAll[Row,1:(i-1)] <- LeftEndWT[1:(i-1)]
+    }
+  }
+}
+SaveCSV(LeftOneSubsAll, "M_Sequences/Tn6677/Tn6677_Left_All_1bp.csv")
+```
+
+**Right**
+
+```{r}
+RightOneSubsAll <- RightEndWT
+BPs <- c("N", "N", "N")
+Row <- 1
+for (i in 1:(ncol(RightOneSubsAll))) {
+  for (j in 1:3) {
+    BPs <- OneBpToAll(RightEndWT[i])
+    if (i == 1){
+      Row <- i+j
+      RightOneSubsAll[Row,i] <- BPs[j]
+      RightOneSubsAll[Row,(i+1):ncol(RightOneSubsAll)] <- RightEndWT[1,(i+1):ncol(RightOneSubsAll)]  
+    }
+    else if (i == ncol(RightOneSubsAll)) {
+      Row <- (i*3)+j-2
+      RightOneSubsAll[Row,i] <- BPs[j]
+      RightOneSubsAll[Row,1:(i-1)] <- RightEndWT[1:(i-1)]
+    }
+    else {
+      Row <- (i*3)+j-2
+      RightOneSubsAll[Row,i] <- BPs[j]
+      RightOneSubsAll[Row,(i+1):ncol(RightOneSubsAll)] <- RightEndWT[1,(i+1):ncol(RightOneSubsAll)] 
+      RightOneSubsAll[Row,1:(i-1)] <- RightEndWT[1:(i-1)]
+    }
+  }
+}
+SaveCSV(RightOneSubsAll, "M_Sequences/Tn6677/Tn6677_Right_All_1bp.csv")
+```
+
+
+### 1 bp substitutions
+
+**Left**
+
+T->A
+```{r}
+OneSubsTA <- LeftEndWT
+for (i in 1:(ncol(OneSubsTA)-1)) {
+  if(i > 1){
+    OneSubsTA[i+1,1:i] <- LeftEndWT[1:i]
+  }
+  OneSubsTA[i+1,i] <- TA(LeftEndWT[i])
+  OneSubsTA[i+1,(i+1):ncol(OneSubsTA)] <- LeftEndWT[1,(i+1):ncol(OneSubsTA)]
+}
+SaveCSV(OneSubsTA, "M_Sequences/Tn6677/Tn6677_Left_TA_1bp.csv")
+```
+
+T->G
+```{r}
+OneSubsTG <- LeftEndWT
+for (i in 1:(ncol(OneSubsTG)-1)) {
+  if(i > 1){
+    OneSubsTG[i+1,1:i] <- LeftEndWT[1:i]
+  }
+  OneSubsTG[i+1,i] <- TG(LeftEndWT[i])
+  OneSubsTG[i+1,(i+1):ncol(OneSubsTG)] <- LeftEndWT[1,(i+1):ncol(OneSubsTG)]
+}
+SaveCSV(OneSubsTG, "M_Sequences/Tn6677/Tn6677_Left_TG_1bp.csv")
+```
+
+
+**Right**
+
+T->A
+```{r}
+RightOneSubsTA <- RightEndWT
+for (i in 1:(ncol(RightOneSubsTA)-1)) {
+  if(i > 1){
+    RightOneSubsTA[i+1,1:i] <- RightEndWT[1:i]
+  }
+  RightOneSubsTA[i+1,i] <- TA(RightEndWT[i])
+  RightOneSubsTA[i+1,(i+1):ncol(RightOneSubsTA)] <- RightEndWT[1,(i+1):ncol(RightOneSubsTA)]
+}
+SaveCSV(RightOneSubsTA, "M_Sequences/Tn6677/Tn6677_Right_TA_1bp.csv")
+```
+
+T->G
+```{r}
+RightOneSubsTG <- RightEndWT
+for (i in 1:(ncol(RightOneSubsTG)-1)) {
+  if(i > 1){
+    RightOneSubsTG[i+1,1:i] <- RightEndWT[1:i]
+  }
+  RightOneSubsTG[i+1,i] <- TG(RightEndWT[i])
+  RightOneSubsTG[i+1,(i+1):ncol(RightOneSubsTG)] <- RightEndWT[1,(i+1):ncol(RightOneSubsTG)]
+}
+SaveCSV(RightOneSubsTG, "M_Sequences/Tn6677/Tn6677_Right_TG_1bp.csv")
+```
+
+
+### 2 bp substitutions
+
+**Left**
+
+T->A
+```{r}
+TwoSubLeftTA <- LeftEndWT
+for (i in 1:(ncol(LeftEndWT)-1)) {
+  if(i > 1){
+    TwoSubLeftTA[i+1,1:i] <- LeftEndWT[1:i]
+  }
+  TwoSubLeftTA[(i+1),i:(i+1)] <- c(TA(LeftEndWT[i]), TA(LeftEndWT[i+1]))
+  if(i < ncol(LeftEndWT)-1){
+    TwoSubLeftTA[i+1,(i+2):ncol(LeftEndWT)] <- LeftEndWT[1,(i+2):ncol(LeftEndWT)]
+  }
+}
+SaveCSV(TwoSubLeftTA, "M_Sequences/Tn6677/Tn6677_Left_TA_2bp.csv")
+```
+
+T->G
+```{r}
+TwoSubLeftTG <- LeftEndWT
+for (i in 1:(ncol(LeftEndWT)-1)) {
+  if(i > 1){
+    TwoSubLeftTG[i+1,1:i] <- LeftEndWT[1:i]
+  }
+  TwoSubLeftTG[(i+1),i:(i+1)] <- c(TG(LeftEndWT[i]), TG(LeftEndWT[i+1]))
+  if(i < ncol(LeftEndWT)-1){
+    TwoSubLeftTG[i+1,(i+2):ncol(LeftEndWT)] <- LeftEndWT[1,(i+2):ncol(LeftEndWT)]
+  }
+}
+SaveCSV(TwoSubLeftTG, "M_Sequences/Tn6677/Tn6677_Left_TG_2bp.csv")
+```
+
+**Right**
+T->A
+```{r}
+TwoSubRightTA <- RightEndWT
+for (i in 1:(ncol(RightEndWT)-1)) {
+  if(i > 1){
+    TwoSubRightTA[i+1,1:i] <- RightEndWT[1:i]
+  }
+  TwoSubRightTA[(i+1),i:(i+1)] <- c(TA(RightEndWT[i]), TA(RightEndWT[i+1]))
+  if(i < ncol(RightEndWT)-1){
+    TwoSubRightTA[i+1,(i+2):ncol(RightEndWT)] <- RightEndWT[1,(i+2):ncol(RightEndWT)]
+  }
+}
+SaveCSV(TwoSubRightTA, "M_Sequences/Tn6677/Tn6677_Right_TA_2bp.csv")
+```
+
+T->G
+```{r}
+TwoSubRightTG <- RightEndWT
+for (i in 1:(ncol(RightEndWT)-1)) {
+  if(i > 1){
+    TwoSubRightTG[i+1,1:i] <- RightEndWT[1:i]
+  }
+  TwoSubRightTG[(i+1),i:(i+1)] <- c(TG(RightEndWT[i]), TG(RightEndWT[i+1]))
+  if(i < ncol(RightEndWT)-1){
+    TwoSubRightTG[i+1,(i+2):ncol(RightEndWT)] <- RightEndWT[1,(i+2):ncol(RightEndWT)]
+  }
+}
+SaveCSV(TwoSubRightTG, "M_Sequences/Tn6677/Tn6677_Right_TG_2bp.csv")
+```
+
+
+### 4 bp substitutions
+
+**Left**
+
+T->A
+```{r}
+FourSubLeftTA <- LeftEndWT
+for (i in 1:(ncol(LeftEndWT)-3)) {
+  if(i > 1){
+    FourSubLeftTA[i+1,1:i] <- LeftEndWT[1:i]
+  }
+  FourSubLeftTA[(i+1),i:(i+3)] <- c(TA(LeftEndWT[i]), TA(LeftEndWT[i+1]), TA(LeftEndWT[i+2]), TA(LeftEndWT[i+3]))
+  if(i < ncol(LeftEndWT)-3){
+    FourSubLeftTA[i+1,(i+4):ncol(LeftEndWT)] <- LeftEndWT[1,(i+4):ncol(LeftEndWT)]
+  }
+}
+SaveCSV(FourSubLeftTA, "M_Sequences/Tn6677/Tn6677_Left_TA_4bp.csv")
+```
+
+T->G
+```{r}
+FourSubLeftTG <- LeftEndWT
+for (i in 1:(ncol(LeftEndWT)-3)) {
+  if(i > 1){
+    FourSubLeftTG[i+1,1:i] <- LeftEndWT[1:i]
+  }
+  FourSubLeftTG[(i+1),i:(i+3)] <- c(TG(LeftEndWT[i]), TG(LeftEndWT[i+1]), TG(LeftEndWT[i+2]), TG(LeftEndWT[i+3]))
+  if(i < ncol(LeftEndWT)-3){
+    FourSubLeftTG[i+1,(i+4):ncol(LeftEndWT)] <- LeftEndWT[1,(i+4):ncol(LeftEndWT)]
+  }
+}
+SaveCSV(FourSubLeftTG, "M_Sequences/Tn6677/Tn6677_Left_TG_4bp.csv")
+```
+
+**Right**
+
+T->A
+```{r}
+FourSubRightTA <- RightEndWT
+for (i in 1:(ncol(RightEndWT)-3)) {
+  if(i > 1){
+    FourSubRightTA[i+1,1:i] <- RightEndWT[1:i]
+  }
+  FourSubRightTA[(i+1),i:(i+3)] <- c(TA(RightEndWT[i]), TA(RightEndWT[i+1]), TA(RightEndWT[i+2]), TA(RightEndWT[i+3]))
+  if(i < ncol(RightEndWT)-3){
+    FourSubRightTA[i+1,(i+4):ncol(RightEndWT)] <- RightEndWT[1,(i+4):ncol(RightEndWT)]
+  }
+}
+SaveCSV(FourSubRightTA, "M_Sequences/Tn6677/Tn6677_Right_TA_4bp.csv")
+```
+
+T->G
+```{r}
+FourSubRightTG <- RightEndWT
+for (i in 1:(ncol(RightEndWT)-3)) {
+  if(i > 1){
+    FourSubRightTG[i+1,1:i] <- RightEndWT[1:i]
+  }
+  FourSubRightTG[(i+1),i:(i+3)] <- c(TG(RightEndWT[i]), TG(RightEndWT[i+1]), TG(RightEndWT[i+2]), TG(RightEndWT[i+3]))
+  if(i < ncol(RightEndWT)-3){
+    FourSubRightTG[i+1,(i+4):ncol(RightEndWT)] <- RightEndWT[1,(i+4):ncol(RightEndWT)]
+  }
+}
+SaveCSV(FourSubRightTG, "M_Sequences/Tn6677/Tn6677_Right_TG_4bp.csv")
+```
+
+### Visualize 4 bp substitutions
+```{r}
+A <- which(LeftEndWT == "A")
+Tee <- which(LeftEndWT == "T")
+G <- which(LeftEndWT == "G")
+C <- which(LeftEndWT == "C")
+
+datatable(FourSubLeftTA) %>% 
+  formatStyle(A, backgroundColor = styleEqual(c("T", "G", "C"), c('red', 'red', 'red'))) %>% 
+  formatStyle(Tee, backgroundColor = styleEqual(c("A", "G", "C"), c('red', 'red', 'red'))) %>% 
+  formatStyle(G, backgroundColor = styleEqual(c("T", "A", "C"), c('red', 'red', 'red'))) %>% 
+  formatStyle(C, backgroundColor = styleEqual(c("T", "A", "G"), c('red', 'red', 'red')))
+```
+
+## Truncations
+
+Create mutant sequences (to add after truncations)
+```{r}
+LeftEndTG <- LeftEndWT
+for (i in 1:ncol(LeftEndWT)){
+  LeftEndTG[i] <- TG(LeftEndTG[i])
+}
+RightEndTG <- RightEndWT
+for (i in 1:ncol(RightEndWT)){
+  RightEndTG[i] <- TG(RightEndTG[i])
+}
+```
+
+**Left**
+```{r}
+LeftEndTrunc <- LeftEndWT
+for(i in 1:(ncol(LeftEndWT)-1)) {
+  LeftEndTrunc[i+1,1:(ncol(LeftEndWT))] <- c(LeftEndWT[1:(ncol(LeftEndWT)-i)], LeftEndTG[((ncol(LeftEndWT)+1)-i):(ncol(LeftEndWT))])
+}
+LeftEndTrunc[(ncol(LeftEndWT)+1),] <- LeftEndTG
+SaveCSV(LeftEndTrunc, "M_Sequences/Tn6677/Tn6677_Left_Trunc.csv")
+```
+**Right**
+```{r}
+RightEndTrunc <- RightEndWT
+for(i in 1:(ncol(RightEndWT)-1)) {
+  RightEndTrunc[i+1,1:(ncol(RightEndWT))] <- c(RightEndWT[1:(ncol(RightEndWT)-i)], RightEndTG[((ncol(RightEndWT)+1)-i):(ncol(RightEndWT))])
+}
+RightEndTrunc[(ncol(RightEndWT)+1),] <- RightEndTG
+SaveCSV(RightEndTrunc, "M_Sequences/Tn6677/Tn6677_Right_Trunc.csv")
+```
+
